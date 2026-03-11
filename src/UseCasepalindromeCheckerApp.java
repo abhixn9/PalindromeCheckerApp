@@ -1,8 +1,54 @@
 import java.util.Scanner;
-import java.util.Deque;
-import java.util.LinkedList;
 
-public class UseCase7PalindromeCheckerApp {
+public class UseCase8PalindromeCheckerApp {
+
+    static class Node {
+        char data;
+        Node next;
+
+        Node(char data) {
+            this.data = data;
+            this.next = null;
+        }
+    }
+
+    public static boolean isPalindrome(Node head) {
+
+        if (head == null || head.next == null) {
+            return true;
+        }
+
+        Node slow = head;
+        Node fast = head;
+
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+
+        Node prev = null;
+        Node curr = slow;
+
+        while (curr != null) {
+            Node next = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = next;
+        }
+
+        Node first = head;
+        Node second = prev;
+
+        while (second != null) {
+            if (first.data != second.data) {
+                return false;
+            }
+            first = first.next;
+            second = second.next;
+        }
+
+        return true;
+    }
 
     public static void main(String[] args) {
 
@@ -11,26 +57,22 @@ public class UseCase7PalindromeCheckerApp {
         System.out.println("Enter a string:");
         String input = sc.nextLine();
 
-        Deque<Character> deque = new LinkedList<>();
+        Node head = null;
+        Node tail = null;
 
         for (int i = 0; i < input.length(); i++) {
-            deque.addLast(input.charAt(i));
-        }
+            Node newNode = new Node(input.charAt(i));
 
-        boolean isPalindrome = true;
-
-        while (deque.size() > 1) {
-
-            char front = deque.removeFirst();
-            char rear = deque.removeLast();
-
-            if (front != rear) {
-                isPalindrome = false;
-                break;
+            if (head == null) {
+                head = newNode;
+                tail = newNode;
+            } else {
+                tail.next = newNode;
+                tail = newNode;
             }
         }
 
-        if (isPalindrome) {
+        if (isPalindrome(head)) {
             System.out.println("The given string is a Palindrome");
         } else {
             System.out.println("The given string is NOT a Palindrome");
